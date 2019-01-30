@@ -29,10 +29,10 @@ object InstrumentationMethods {
         val method = clazz.getDeclaredMethod(methodName)
 
         //method.insertBefore("{ System.err.print(\">>> Arguments for the method -> \"); System.err.println($args); }")
-        method.insertBefore("{ com.yoppworks.internal.instrumentationDemo.javaAgent.InstrumentationMethods.printArguments($args);  }")
+        method.insertBefore("{ com.yoppworks.internal.instrumentationDemo.javaAgent.InstrumentationMethods.printArguments(\"" + methodName + "\", $args);  }")
 
         //method.insertAfter("{ System.err.print(\">>> Return value  -> \"); System.err.println($_); }")
-        method.insertAfter("{ com.yoppworks.internal.instrumentationDemo.javaAgent.InstrumentationMethods.printReturnValue($_); }")
+        method.insertAfter("{ com.yoppworks.internal.instrumentationDemo.javaAgent.InstrumentationMethods.printReturnValue(\"" + methodName + "\", $_); }")
       }
     }
 
@@ -44,16 +44,16 @@ object InstrumentationMethods {
     instrumentMethods(c, methods)
   }
 
-  def printArguments(args: Array[Any]): Unit = {
+  def printArguments(methodName: String, args: Array[Any]): Unit = {
     val msg = args.map(arg =>
       s"$arg (${arg.getClass.getCanonicalName})"
-    ).mkString(s">>> List of arguments [ ", " ; ", "]")
+    ).mkString(s">>> List of arguments for '$methodName' [ ", " ; ", "]")
 
     System.err.println(msg)
   }
 
-  def printReturnValue(obj: Any): Unit = {
-    val msg = s""">>> Return value  -> $obj (${obj.getClass.getCanonicalName})"""
+  def printReturnValue(methodName: String, obj: Any): Unit = {
+    val msg = s""">>> Return value for '$methodName' -> $obj (${obj.getClass.getCanonicalName})"""
 
     System.err.println(msg)
   }

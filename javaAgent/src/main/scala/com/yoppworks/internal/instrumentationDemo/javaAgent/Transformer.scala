@@ -14,16 +14,11 @@ class Transformer() extends ClassFileTransformer {
                          protectionDomain: ProtectionDomain,
                          classfileBuffer: Array[Byte]): Array[Byte] = {
     if (className.startsWith("com/yoppworks"))
-      Option(className) match {
-        case Some(name) =>
-          System.err.println(s">>> Class '$name' loaded")
-        case None =>
-          System.err.println(s">>> Anonymous class loaded from loader '$loader'")
-      }
+      System.err.println(s">>> Class '$className' loaded")
 
-    if (instrumentationRules.keySet.contains(className))
-      InstrumentationMethods.instrumentMethods(classfileBuffer, className, instrumentationRules(className))
-    else
-      classfileBuffer
+    instrumentationRules.get(className) match {
+      case Some(methods) => InstrumentationMethods.instrumentMethods(classfileBuffer, className, methods)
+      case None => classfileBuffer
+    }
   }
 }
