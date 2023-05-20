@@ -1,9 +1,9 @@
-package com.yoppworks.internal.instrumentationDemo.javaAgent
+package com.funkyfunctor.internal.instrumentationDemo.javaAgent
+
+import com.funkyfunctor.internal.instrumentationDemo.javaAgent.MyJavaAgent.printMessage
+import javassist.{ClassPool, CtClass}
 
 import java.io.ByteArrayInputStream
-
-import javassist.{ClassPool, CtClass, CtMethod}
-
 import scala.util.Try
 
 object InstrumentationMethods {
@@ -16,9 +16,9 @@ object InstrumentationMethods {
     val msg = result
       .getDeclaredMethods
       .map { meth => s">>> - ${meth.getName}" }
-      .mkString(s">>> List of methods for $className:$ln", ln, "")
+      .mkString(s"List of methods for $className:$ln", ln, "")
 
-    System.err.println(msg)
+    printMessage(msg)
 
     result
   }
@@ -29,10 +29,10 @@ object InstrumentationMethods {
         val method = clazz.getDeclaredMethod(methodName)
 
         //method.insertBefore("{ System.err.print(\">>> Arguments for the method -> \"); System.err.println($args); }")
-        method.insertBefore("{ com.yoppworks.internal.instrumentationDemo.javaAgent.InstrumentationMethods.printArguments(\"" + methodName + "\", $args);  }")
+        method.insertBefore("{ com.funkyfunctor.internal.instrumentationDemo.javaAgent.InstrumentationMethods.printArguments(\"" + methodName + "\", $args);  }")
 
         //method.insertAfter("{ System.err.print(\">>> Return value  -> \"); System.err.println($_); }")
-        method.insertAfter("{ com.yoppworks.internal.instrumentationDemo.javaAgent.InstrumentationMethods.printReturnValue(\"" + methodName + "\", $_); }")
+        method.insertAfter("{ com.funkyfunctor.internal.instrumentationDemo.javaAgent.InstrumentationMethods.printReturnValue(\"" + methodName + "\", $_); }")
       }
     }
 
@@ -47,14 +47,14 @@ object InstrumentationMethods {
   def printArguments(methodName: String, args: Array[Any]): Unit = {
     val msg = args.map(arg =>
       s"$arg (${arg.getClass.getCanonicalName})"
-    ).mkString(s">>> List of arguments for '$methodName' [ ", " ; ", "]")
+    ).mkString(s"List of arguments for '$methodName' [ ", " ; ", "]")
 
-    System.err.println(msg)
+    printMessage(msg)
   }
 
   def printReturnValue(methodName: String, obj: Any): Unit = {
-    val msg = s""">>> Return value for '$methodName' -> $obj (${obj.getClass.getCanonicalName})"""
+    val msg = s"""Return value for '$methodName' -> $obj (${obj.getClass.getCanonicalName})"""
 
-    System.err.println(msg)
+    printMessage(msg)
   }
 }

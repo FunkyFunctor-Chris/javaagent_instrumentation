@@ -2,12 +2,17 @@ lazy val agent = (project in file("."))
   .settings(
     name := "javaAgent",
     version := "0.1",
-    scalaVersion := "2.12.8",
-    organization := "Yoppworks Inc.",
-    libraryDependencies += "org.javassist" % "javassist" % "3.24.0-GA",
-    assemblyJarName in assembly := "demo-agent.jar",
+    scalaVersion := "2.13.10",
+    organization := "Funky Functor Inc.",
+    libraryDependencies += "org.javassist" % "javassist" % "3.29.2-GA",
+    assembly / assemblyJarName := "demo-agent.jar",
+    assembly / assemblyMergeStrategy := {
+      case PathList("META-INF", _*) => MergeStrategy.discard
+      case _                        => MergeStrategy.first
+    },
     packageOptions += Package.ManifestAttributes(
-      "Premain-Class" -> "com.yoppworks.internal.instrumentationDemo.javaAgent.MyJavaAgent",
+      "Premain-Class" -> "com.funkyfunctor.internal.instrumentationDemo.javaAgent.MyJavaAgent",
       "Can-Redefine-Classes" -> "true",
-      "Can-Retransform-Classes" -> "true")
+      "Can-Retransform-Classes" -> "true"
+    )
   )
