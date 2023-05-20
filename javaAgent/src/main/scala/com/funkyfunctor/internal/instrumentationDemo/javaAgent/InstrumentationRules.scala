@@ -1,4 +1,4 @@
-package com.yoppworks.internal.instrumentationDemo.javaAgent.data
+package com.funkyfunctor.internal.instrumentationDemo.javaAgent
 
 case class ClassRule(className: String,
                      method: Map[String, MethodRule]) {

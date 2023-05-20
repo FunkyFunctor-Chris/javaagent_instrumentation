@@ -1,4 +1,4 @@
-package com.funkyfunctor.internal.instrumentationDemo.baseApp
+package com.funkyfunctor.demo.instrumentationDemo.baseApp
 
 import zio._
 import zio.http._
